@@ -35,9 +35,9 @@ express()
 
 const callerUserId = async (phone) => {
   try {
-    pool.getConnection(function(err, connection) {
+    await pool.getConnection(function(err, connection) {
         if (err) throw new Error(err);
-        connection.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
+        await connection.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
             if (err) throw new Error(err);
 
             if(result.length == 0)
@@ -100,9 +100,9 @@ const incomingCall = async (req, res) => {
           // const client = await pool.getConnection()
           // const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
           // client.release();
-          pool.getConnection(function(err, connection) {
+          await pool.getConnection(function(err, connection) {
             if (err) throw new Error(err);
-              connection.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
+              await connection.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
                   if (err) throw new Error(err);
 
                   if(result.length == 0)
