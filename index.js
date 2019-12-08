@@ -88,9 +88,9 @@ const incomingCall = async (req, res) => {
           // client.release();
           pool.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
             if (err) throw new Error(err);
-            if (Object.keys(result.rows).length !== 0) {
-              return result.rows[0].userid;
-            }
+            
+            return result.rows[0].userid;
+            
           })
         } catch (err) {
           console.error(err);
