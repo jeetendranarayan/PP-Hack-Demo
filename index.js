@@ -43,9 +43,9 @@ const callerUserId = async (phone) => {
             if(result.length == 0)
               return 0;
 
-            if (Object.keys(result.rows).length !== 0) {
+            //if (Object.keys(result.rows).length !== 0) {
               return result.rows[0].userid;
-            }
+            //}
             connection.release();
         })
     });
@@ -108,9 +108,9 @@ const incomingCall = async (req, res) => {
                   if(result.length == 0)
                     return 0;
 
-                  if (Object.keys(result.rows).length !== 0) {
+                  // if (Object.keys(result.rows).length !== 0) {
                     return result.rows[0].userid;
-                  }
+                  //}
                   connection.release();
               })
           });
