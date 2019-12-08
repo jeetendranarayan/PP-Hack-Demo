@@ -104,7 +104,7 @@ const incomingCall = async (req, res) => {
           await pool.getConnection(function(err, connection) {
             if (err) throw new Error(err);
               console.log('executing insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
-              connection.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
+              connection.query('insert into users values (\''+ phone +'\', \'' + jsonResponse.userId + '\')', function (err, result) {
                   console.log('user id is '+jsonResponse.userId);
                   if (err) throw new Error(err);
                   console.log(result);
