@@ -34,7 +34,7 @@ express()
 
 const callerUserId = async (phone) => {
   try {
-    const client = await pool.connect()
+    const client = await pool.getConnection()
     const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
     client.release();
     // Check for user in db
@@ -77,7 +77,7 @@ const incomingCall = async (req, res) => {
       myVoiceIt.createUser(async (jsonResponse)=>{
         speak(twiml, "Welcome back to the Paypal offline payment service, you are a new user and will now be enrolled");
         try {
-          const client = await pool.connect()
+          const client = await pool.getConnection()
           const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
           client.release();
         } catch (err) {
