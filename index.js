@@ -39,6 +39,8 @@ const callerUserId = async (phone) => {
     // client.release();
     pool.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
       if (err) throw new Error(err);
+      if(result.length == 0)
+        return 0;
       if (Object.keys(result.rows).length !== 0) {
         return result.rows[0].userid;
       }
