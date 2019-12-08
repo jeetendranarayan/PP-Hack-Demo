@@ -40,7 +40,7 @@ const callerUserId = async (phone) => {
          connection.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
             if (err) throw new Error(err);
             console.log(result);
-            if(result.length == 0)
+            if(result.length === 0)
               return 0;
 
             //if (Object.keys(result.rows).length !== 0) {
@@ -106,11 +106,10 @@ const incomingCall = async (req, res) => {
                   console.log('user id is '+jsonResponse.userId);
                   if (err) throw new Error(err);
                   console.log(result);
-                  if(result.length == 0)
-                    return 0;
+                  return jsonResponse.userId;
 
                   // if (Object.keys(result.rows).length !== 0) {
-                    return result.rows[0].userid;
+                    //return result.rows[0].userid;
                   //}
                   connection.release();
               })
