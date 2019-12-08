@@ -10,11 +10,14 @@ const VoiceResponse = twilio.twiml.VoiceResponse;
 const express = require('express')
 const bodyParser = require('body-parser');
 
-const { Pool } = require('pg');
-// const pool = new Pool({
-//   connectionString: config.dataBaseURL,
-//   ssl: true
-// });
+var mysql = require('mysql');
+
+var pool  = mysql.createPool({
+    host     : 'remotemysql.com',
+    user     : '58y5021f53',
+    password : '1sxcXeilmn',
+    database : '58y5021f53'
+});
 
 const PORT = process.env.PORT || 5000
 
@@ -30,17 +33,17 @@ express()
   .listen(PORT, () => console.log(`Listening on port ${ PORT }`))
 
 const callerUserId = async (phone) => {
-  // try {
-  //   const client = await pool.connect()
-  //   const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
-  //   client.release();
-  //   // Check for user in db
-  //   if (Object.keys(result.rows).length !== 0) {
-  //     return result.rows[0].userid;
-  //   }
-  // } catch (err) {
-  //     console.error(err);
-  // }
+  try {
+    const client = await pool.connect()
+    const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
+    client.release();
+    // Check for user in db
+    if (Object.keys(result.rows).length !== 0) {
+      return result.rows[0].userid;
+    }
+  } catch (err) {
+      console.error(err);
+  }
   return 0
 };
 
@@ -73,14 +76,14 @@ const incomingCall = async (req, res) => {
       // Create a new user for new number
       myVoiceIt.createUser(async (jsonResponse)=>{
         speak(twiml, "Welcome back to the Paypal offline payment service, you are a new user and will now be enrolled");
-        // try {
-        //   const client = await pool.connect()
-        //   const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
-        //   client.release();
-        // } catch (err) {
-        //   console.error(err);
-        //   res.send("Error " + err);
-        // }
+        try {
+          const client = await pool.connect()
+          const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
+          client.release();
+        } catch (err) {
+          console.error(err);
+          res.send("Error " + err);
+        }
 
         twiml.redirect('/enroll');
         res.type('text/xml');
