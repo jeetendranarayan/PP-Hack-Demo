@@ -103,10 +103,20 @@ const incomingCall = async (req, res) => {
           // client.release();
           await pool.getConnection(function(err, connection) {
             if (err) throw new Error(err);
-              console.log('executing insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
+
+              console.log('executing insert into users values (\''+ phone +'\', \'' + jsonResponse.userId + '\')');
               connection.query('insert into users values (\''+ phone +'\', \'' + jsonResponse.userId + '\')', function (err, result) {
                   console.log('user id is '+jsonResponse.userId);
-                  if (err) throw new Error(err);
+                  //if (err) throw new Error(err);
+                  connection.commit(function(err) {
+                    if (err) { 
+                      connection.rollback(function() {
+                        throw err;
+                      });
+                    }
+                      console.log('Transaction Complete.');
+                      connection.end();
+                  });
                   console.log(result);
                   return jsonResponse.userId;
 
