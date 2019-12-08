@@ -39,7 +39,7 @@ const callerUserId = async (phone) => {
         if (err) throw new Error(err);
          connection.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
             if (err) throw new Error(err);
-
+            console.log(result);
             if(result.length == 0)
               return 0;
 
@@ -103,8 +103,9 @@ const incomingCall = async (req, res) => {
           await pool.getConnection(function(err, connection) {
             if (err) throw new Error(err);
               connection.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
+                  console.log('user id is '+jsonResponse.userId);
                   if (err) throw new Error(err);
-
+                  console.log(result);
                   if(result.length == 0)
                     return 0;
 
