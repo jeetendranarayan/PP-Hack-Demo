@@ -37,8 +37,8 @@ const callerUserId = async (phone) => {
   try {
     await pool.getConnection(function(err, connection) {
         if (err) throw new Error(err);
-        console.log('executing SELECT userId FROM users where phone=\'' + phone + '\'');
-         connection.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
+        console.log('executing SELECT userid FROM users where phone=\'' + phone + '\'');
+         connection.query('SELECT userid FROM users where phone=\'' + phone + '\'', function (err, result) {
             if (err) throw new Error(err);
             console.log(result);
             if(result.length === 0)
