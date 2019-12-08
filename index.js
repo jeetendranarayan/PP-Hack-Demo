@@ -37,7 +37,7 @@ const callerUserId = async (phone) => {
   try {
     await pool.getConnection(function(err, connection) {
         if (err) throw new Error(err);
-        await connection.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
+         connection.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
             if (err) throw new Error(err);
 
             if(result.length == 0)
@@ -102,7 +102,7 @@ const incomingCall = async (req, res) => {
           // client.release();
           await pool.getConnection(function(err, connection) {
             if (err) throw new Error(err);
-              await connection.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
+              connection.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
                   if (err) throw new Error(err);
 
                   if(result.length == 0)
