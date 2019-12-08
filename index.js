@@ -34,13 +34,17 @@ express()
 
 const callerUserId = async (phone) => {
   try {
-    const client = await pool.getConnection()
-    const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
-    client.release();
+    // const client = await pool.getConnection()
+    // const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
+    // client.release();
+    pool.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
+      if (err) throw new Error(err);
+      if (Object.keys(result.rows).length !== 0) {
+        return result.rows[0].userid;
+      }
+    })
     // Check for user in db
-    if (Object.keys(result.rows).length !== 0) {
-      return result.rows[0].userid;
-    }
+    
   } catch (err) {
       console.error(err);
   }
@@ -77,9 +81,15 @@ const incomingCall = async (req, res) => {
       myVoiceIt.createUser(async (jsonResponse)=>{
         speak(twiml, "Welcome back to the Paypal offline payment service, you are a new user and will now be enrolled");
         try {
-          const client = await pool.getConnection()
-          const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
-          client.release();
+          // const client = await pool.getConnection()
+          // const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
+          // client.release();
+          pool.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
+            if (err) throw new Error(err);
+            if (Object.keys(result.rows).length !== 0) {
+              return result.rows[0].userid;
+            }
+          })
         } catch (err) {
           console.error(err);
           res.send("Error " + err);
