@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 var mysql = require('mysql');
 
 var pool  = mysql.createPool({
+    connectionLimit : 10,
     host     : 'remotemysql.com',
     user     : '58y5021f53',
     password : '1sxcXeilmn',
@@ -34,17 +35,30 @@ express()
 
 const callerUserId = async (phone) => {
   try {
-    // const client = await pool.getConnection()
+    pool.getConnection(function(err, connection) {
+        if (err) throw new Error(err);
+        connection.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
+            if (err) throw new Error(err);
+
+            if(result.length == 0)
+              return 0;
+
+            if (Object.keys(result.rows).length !== 0) {
+              return result.rows[0].userid;
+            }
+            connection.release();
+        })
+    });
     // const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
     // client.release();
-    pool.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
-      if (err) throw new Error(err);
-      if(result.length == 0)
-        return 0;
-      if (Object.keys(result.rows).length !== 0) {
-        return result.rows[0].userid;
-      }
-    })
+    // pool.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
+    //   if (err) throw new Error(err);
+    //   if(result.length == 0)
+    //     return 0;
+    //   if (Object.keys(result.rows).length !== 0) {
+    //     return result.rows[0].userid;
+    //   }
+    // })
     // Check for user in db
     
   } catch (err) {
@@ -86,12 +100,33 @@ const incomingCall = async (req, res) => {
           // const client = await pool.getConnection()
           // const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
           // client.release();
-          pool.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
+          pool.getConnection(function(err, connection) {
             if (err) throw new Error(err);
+              connection.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
+                  if (err) throw new Error(err);
+
+                  if(result.length == 0)
+                    return 0;
+
+                  if (Object.keys(result.rows).length !== 0) {
+                    return result.rows[0].userid;
+                  }
+                  connection.release();
+              })
+          });
+        //   pool.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
+        //     if (err) throw new Error(err);
+        //     connection.commit(function(err) {
+        // if (err) { 
+        //   connection.rollback(function() {
+        //     throw err;
+        //   });
+        // }
+      //   console.log('success!');
+      // });
+          //   return result.rows[0].userid;
             
-            return result.rows[0].userid;
-            
-          })
+          // })
         } catch (err) {
           console.error(err);
           res.send("Error " + err);
