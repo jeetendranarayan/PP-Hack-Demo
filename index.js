@@ -287,7 +287,6 @@ const processVerification = async (req, res) => {
 
         rp(options)
           .then(function (parsedBody) {
-              console.log(parsedBody);
               console.log('post call done');
           })
           .catch(function (err) {
