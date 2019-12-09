@@ -45,7 +45,7 @@ const callerUserId = async (phone) => {
         console.log('user id in select is '+result[0].userid);
             // Check for user in db
         usId = result[0].userid;
-        return result[0].userid;
+        return await result[0].userid;
     });
   } catch (err) {
       console.error(err);
@@ -91,7 +91,7 @@ const incomingCall = async (req, res) => {
 
               console.log('executing insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')');
               console.log('Result in insert is '+ result);
-              return jsonResponse.userId;
+              return await jsonResponse.userId;
           });
 
         } catch (err) {
