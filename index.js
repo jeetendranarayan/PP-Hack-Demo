@@ -257,7 +257,7 @@ const processVerification = async (req, res) => {
   const userId = await callerUserId(removeSpecialChars(req.body.From));
   const recordingURL = req.body.RecordingUrl + '.wav';
   const twiml = new VoiceResponse();
-
+  console.log('testing');
   // Sleep and wait for Twillio to make file available
   await new Promise(resolve => setTimeout(resolve, 1000));
   await myVoiceIt.voiceVerificationByUrl({
