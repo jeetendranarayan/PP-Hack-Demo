@@ -94,18 +94,15 @@ const incomingCall = async (req, res) => {
             if (err) throw new Error(err);
 
               console.log('executing insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')');
-              connection.query('insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')', function (err, result) {
-                  if (err) throw new Error(err);
-                  
-                  console.log(result);
-                  
-                  console.log('Result in insert is '+ result);
+              const result = await connection.query('insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')';
+              console.log(result);
+              console.log('Result in insert is '+ result);
                   // if (Object.keys(result).length !== 0) {
                   //   return result[0].userid;
                   // }
                   return jsonResponse.userId;
                   connection.release();
-              })
+              
           });
 
         } catch (err) {
