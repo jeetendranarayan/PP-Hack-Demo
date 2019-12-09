@@ -44,11 +44,8 @@ const callerUserId = async (phone) => {
         if (err) throw new Error(err);
         console.log('user id in select is '+result[0].userid);
             // Check for user in db
-            if (Object.keys(result).length !== 0) {
-              return result[0].userid;
-            }
-        
-        
+            
+        return result[0].userid;
     });
   } catch (err) {
       console.error(err);
@@ -180,6 +177,7 @@ const enroll = async (req, res) => {
 // Process Enrollment
 const processEnrollment = async (req, res) => {
   const userId = await callerUserId(removeSpecialChars(req.body.From));
+  console.log('user id in processEnrollment is '+userId);
   var enrollCount = req.query.enrollCount;
   const recordingURL = req.body.RecordingUrl + ".wav";
   const twiml = new VoiceResponse();
@@ -202,7 +200,7 @@ const processEnrollment = async (req, res) => {
   }
 
   // Sleep and wait for Twillio to make file available
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise(resolve => setTimeout(resolve, 10000));
   myVoiceIt.createVoiceEnrollmentByUrl({
     userId: userId,
     audioFileURL: recordingURL,
