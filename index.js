@@ -101,7 +101,7 @@ const incomingCall = async (req, res) => {
           //     console.log('Result in insert is '+ result);
           //     // return jsonResponse.userId;
           // });
-          const [result, fields] = await pool.query("insert into users(phone, userID) values ('"+ phone +"','" + jsonResponse.userId + "'");
+          const [result, fields] = await pool.query("insert into users(phone, userID) values ('"+ phone +"','" + jsonResponse.userId+")");
           console.log(result);
           //return result[0].userid;
 
