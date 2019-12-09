@@ -280,10 +280,9 @@ const processVerification = async (req, res) => {
             uri: 'https://studio.twilio.com/v1/Flows/FW489f1d26d21e9c3ab611ee89b0ae5520/Executions',
             headers : {
               'Authorization' : auth,
-              'content-type': 'application/json'
+              'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: jsonBody,
-            json: true // Automatically stringifies the body to JSON
+            body: jsonBody
         };
 
         rp(options)
