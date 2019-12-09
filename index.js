@@ -49,7 +49,10 @@ const callerUserId = async (phone) => {
     // });
     const [result, fields] = await pool.query('SELECT userid FROM users where phone=\'' + phone + '\'');
     console.log(result);
-    return result[0].userid;
+    if(result.length !== 0)
+      return result[0].userid;
+    else
+      return -1;
 
   // } catch (err) {
   //     console.error(err);
@@ -67,7 +70,7 @@ const incomingCall = async (req, res) => {
     userId :userId
   }, async (jsonResponse)=>{
     // User already exists
-    if(jsonResponse.exists === true) {
+    if(jsonResponse.exists === true && userId !== -1) {
       // Greet the caller when their account profile is recognized by the VoiceIt API.
       speak(twiml, "Welcome back to the Paypal offline payment service, your phone number has been recognized");
       // Let's provide the caller with an opportunity to enroll by typing `1` on
