@@ -38,17 +38,14 @@ const callerUserId = async (phone) => {
     // const client = await pool.getConnection()
     // const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
     // client.release();
-    await pool.query('SELECT userid FROM users where phone=\'' + phone + '\'', function(err, result) {
-        if (err) throw new Error(err);
-        console.log('executing SELECT userid FROM users where phone=\'' + phone + '\'');
-        console.log('user id in select is '+result[0].userid);
-            // Check for user in db
-        return result[0].userid;
-    });
+    const result = await pool.query('SELECT userid FROM users where phone=\'' + phone + '\'');
+    console.log('executing SELECT userid FROM users where phone=\'' + phone + '\'');
+    console.log('user id in select is '+result[0].userid);
+    return result[0].userid;
   } catch (err) {
       console.error(err);
   }
-  //return usId;
+  return 0
 };
 
 const incomingCall = async (req, res) => {
