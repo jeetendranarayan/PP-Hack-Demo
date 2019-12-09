@@ -33,7 +33,6 @@ express()
   .post('/process_enrollment', (req, res) => processEnrollment(req, res))
   .post('/verify', (req, res) => verify(req, res))
   .post('/process_verification', (req, res) => processVerification(req, res))
-  //.post('/say_num', (req, res) => saySomething(req, res))
   .listen(PORT, () => console.log(`Listening on port ${ PORT }`))
 
 const callerUserId = async (phone) => {
@@ -308,12 +307,6 @@ const processVerification = async (req, res) => {
   });
 
 };
-
-// const saySomething = async (req, res) => {
-//   const digits = req.body.Digits;
-//   const twiml = new VoiceResponse();
-//   speak(twiml,digits);
-// };
 
 function speak(twiml, textToSpeak, contentLanguage = "en-US"){
   twiml.say(textToSpeak, {
