@@ -34,6 +34,7 @@ express()
   .listen(PORT, () => console.log(`Listening on port ${ PORT }`))
 
 const callerUserId = async (phone) => {
+  var usId = 0;
   try {
     // const client = await pool.getConnection()
     // const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
@@ -43,13 +44,13 @@ const callerUserId = async (phone) => {
         console.log('executing SELECT userid FROM users where phone=\'' + phone + '\'');
         console.log('user id in select is '+result[0].userid);
             // Check for user in db
-            
+        usId = result[0].userid;
         return result[0].userid;
     });
   } catch (err) {
       console.error(err);
   }
-  return -10912
+  return usId;
 };
 
 const incomingCall = async (req, res) => {
