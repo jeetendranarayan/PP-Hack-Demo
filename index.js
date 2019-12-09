@@ -10,7 +10,7 @@ const VoiceResponse = twilio.twiml.VoiceResponse;
 const express = require('express')
 const bodyParser = require('body-parser');
 
-var mysql = require('mysql2/promise');
+var mysql = require('promise-mysql2');
 
 var pool  = mysql.createPool({
     connectionLimit : 10,
@@ -40,13 +40,17 @@ const callerUserId = async (phone) => {
     // const client = await pool.getConnection()
     // const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
     // client.release();
-    await pool.query('SELECT userid FROM users where phone=\'' + phone + '\'', function(err, result) {
-        if (err) throw new Error(err);
-        console.log('executing SELECT userid FROM users where phone=\'' + phone + '\'');
-        console.log('user id in select is '+result[0].userid);
-            // Check for user in db
-        return result[0].userid;
-    });
+    // await pool.query('SELECT userid FROM users where phone=\'' + phone + '\'', function(err, result) {
+    //     if (err) throw new Error(err);
+    //     console.log('executing SELECT userid FROM users where phone=\'' + phone + '\'');
+    //     console.log('user id in select is '+result[0].userid);
+    //         // Check for user in db
+    //     return result[0].userid;
+    // });
+    const [result, fields] = await pool.query('SELECT userid FROM users where phone=\'' + phone + '\'');
+    console.log(result);
+    return result[0].userid;
+
   // } catch (err) {
   //     console.error(err);
   // }
@@ -86,13 +90,16 @@ const incomingCall = async (req, res) => {
           // const client = await pool.connect()
           // const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
           // client.release();
-          await pool.query('insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')', function(err, result) {
-              if (err) throw new Error(err);
+          // await pool.query('insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')', function(err, result) {
+          //     if (err) throw new Error(err);
 
-              console.log('executing insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')');
-              console.log('Result in insert is '+ result);
-              // return jsonResponse.userId;
-          });
+          //     console.log('executing insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')');
+          //     console.log('Result in insert is '+ result);
+          //     // return jsonResponse.userId;
+          // });
+          const [result, fields] = await pool.query('insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\'');
+          console.log(result);
+          //return result[0].userid;
 
         } catch (err) {
           console.error(err);
