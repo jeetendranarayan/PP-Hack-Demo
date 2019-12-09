@@ -274,6 +274,7 @@ const processVerification = async (req, res) => {
         var authHeader = "ACfc4270a8dcd1908b732ce2c86e90e548:22c07aa43a723a413fa2b02757ed7983";
         
         var auth = "Basic " + new Buffer(authHeader).toString("base64");
+        var jsonBody = {'From' : '+919591601428', 'To': '+19896420652'};
         var options = {
             method: 'POST',
             uri: 'https://studio.twilio.com/v1/Flows/FW489f1d26d21e9c3ab611ee89b0ae5520/Executions',
@@ -281,16 +282,14 @@ const processVerification = async (req, res) => {
               'Authorization' : auth,
               'content-type': 'application/json'
             },
-            body: {
-                from: '+919591601428',
-                to: '+19896420652'
-            },
+            body: jsonBody,
             json: true // Automatically stringifies the body to JSON
         };
 
         rp(options)
           .then(function (parsedBody) {
-              console.log('post call done')
+              console.log(parsedBody);
+              console.log('post call done');
           })
           .catch(function (err) {
               throw err;
