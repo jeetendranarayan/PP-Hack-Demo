@@ -90,6 +90,7 @@ const incomingCall = async (req, res) => {
       myVoiceIt.createUser(async (jsonResponse)=>{
         speak(twiml, "Welcome back to the Paypal offline payment service, you are a new user and will now be enrolled");
         try {
+          console.log('done');
           // const client = await pool.connect()
           // const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
           // client.release();
