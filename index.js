@@ -33,6 +33,7 @@ express()
   .post('/process_enrollment', (req, res) => processEnrollment(req, res))
   .post('/verify', (req, res) => verify(req, res))
   .post('/process_verification', (req, res) => processVerification(req, res))
+  .post('/say_num', (req, res) => saySomething(req, res))
   .listen(PORT, () => console.log(`Listening on port ${ PORT }`))
 
 const callerUserId = async (phone) => {
@@ -269,7 +270,14 @@ const processVerification = async (req, res) => {
 
       if (jsonResponse.responseCode == "SUCC") {
         speak(twiml, 'Verification successful!');
-        speak(twiml,'Thank you for calling voice its voice biometrics demo. Have a nice day!');
+        const gather = twiml.gather({
+          action: '/say_num',
+          numDigits: 10,
+          timeout: 30
+        });
+        speak(gather, "Please enter the phone number of receiver : ");
+        console.log(gather);
+        twiml.redirect('/say_num?digits=TIMEOUT');
         //Hang up
       } else if (numTries > 2) {
         //3 attempts failed
@@ -306,6 +314,12 @@ const processVerification = async (req, res) => {
       res.send(twiml.toString());
   });
 
+};
+
+const saySomething = async (req, res) => {
+  const digits = req.body.Digits;
+  const twiml = new VoiceResponse();
+  speak(twiml,digits);
 };
 
 function speak(twiml, textToSpeak, contentLanguage = "en-US"){
