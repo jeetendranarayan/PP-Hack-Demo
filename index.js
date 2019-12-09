@@ -50,7 +50,7 @@ const callerUserId = async (phone) => {
             }
               connection.release();
         })
-    }
+    });
   } catch (err) {
       console.error(err);
   }
