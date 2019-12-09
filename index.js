@@ -282,7 +282,8 @@ const processVerification = async (req, res) => {
               'Authorization' : auth,
               'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: jsonBody
+            body: jsonBody,
+            json: true
         };
 
         rp(options)
