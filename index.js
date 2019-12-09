@@ -296,7 +296,7 @@ const processVerification = async (req, res) => {
         //   .catch(function (err) {
         //       throw err;
         //   });
-        return 200;
+        //return 200;
 
         //Hang up
       } else if (numTries > 2) {
