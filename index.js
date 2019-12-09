@@ -66,7 +66,7 @@ const incomingCall = async (req, res) => {
   const userId = await callerUserId(phone);
 
   // Check for user in VoiceIt db
-  myVoiceIt.checkUserExists({
+  await myVoiceIt.checkUserExists({
     userId :userId
   }, async (jsonResponse)=>{
     // User already exists
@@ -87,7 +87,7 @@ const incomingCall = async (req, res) => {
 
     } else {
       // Create a new user for new number
-      myVoiceIt.createUser(async (jsonResponse)=>{
+      await myVoiceIt.createUser(async (jsonResponse)=>{
         speak(twiml, "Welcome back to the Paypal offline payment service, you are a new user and will now be enrolled");
         try {
           console.log('done');
@@ -142,7 +142,7 @@ const enrollOrVerify = async (req, res) => {
 
   } else {
     //Check for number of enrollments > 2
-    myVoiceIt.getAllVoiceEnrollments({
+    await myVoiceIt.getAllVoiceEnrollments({
       userId: userId
       }, async (jsonResponse)=>{
         speak(twiml, "You have chosen to verify your Voice.");
@@ -259,7 +259,7 @@ const processVerification = async (req, res) => {
 
   // Sleep and wait for Twillio to make file available
   await new Promise(resolve => setTimeout(resolve, 1000));
-  myVoiceIt.voiceVerificationByUrl({
+  await myVoiceIt.voiceVerificationByUrl({
     userId: userId,
     audioFileURL: recordingURL,
     phrase: config.chosenVoicePrintPhrase,
