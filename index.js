@@ -45,7 +45,7 @@ const callerUserId = async (phone) => {
               return 0;
 
             //if (Object.keys(result.rows).length !== 0) {
-              return result.rows[0].userid;
+              return result[0].userid;
             //}
             connection.release();
         })
