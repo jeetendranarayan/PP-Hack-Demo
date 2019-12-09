@@ -10,15 +10,17 @@ const VoiceResponse = twilio.twiml.VoiceResponse;
 const express = require('express')
 const bodyParser = require('body-parser');
 
-var mysql = require('mysql');
+var mysql = require('mysql2');
 
-var pool  = mysql.createPool({
+var pool1  = mysql.createPool({
     connectionLimit : 10,
     host     : 'remotemysql.com',
     user     : '58y5021f53',
     password : '1sxcXeilmn',
     database : '58y5021f53'
 });
+
+const pool = pool1.promise();
 
 const PORT = process.env.PORT || 5000
 
