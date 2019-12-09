@@ -64,6 +64,7 @@ const callerUserId = async (phone) => {
 
 const incomingCall = async (req, res) => {
   const twiml = new VoiceResponse();
+  console.log(req);
   const phone = removeSpecialChars(req.body.From);
   const userId = await callerUserId(phone);
 
