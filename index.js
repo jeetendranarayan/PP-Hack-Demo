@@ -281,8 +281,8 @@ const processVerification = async (req, res) => {
               "Authorization" : auth
             },
             body: {
-                "From":"+919591601428",
-                "To":"+19896420652"
+                From: '+919591601428',
+                To: '+19896420652'
             },
             json: true // Automatically stringifies the body to JSON
         };
