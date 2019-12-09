@@ -278,7 +278,7 @@ const processVerification = async (req, res) => {
             method: 'POST',
             uri: 'https://studio.twilio.com/v1/Flows/FW489f1d26d21e9c3ab611ee89b0ae5520/Executions',
             headers : {
-              "Authorization" : authHeader
+              "Authorization" : auth
             },
             body: {
                 "From":"+919591601428",
