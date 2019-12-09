@@ -269,7 +269,7 @@ const processVerification = async (req, res) => {
 
       if (jsonResponse.responseCode == "SUCC") {
         speak(twiml, 'Verification successful!, We ll soon integrate with AAman\'s code');
-        TwilioClient.studio.flows('FW489f1d26d21e9c3ab611ee89b0ae5520').executions.create({ to: '+12029183768', from: '+1331481', parameters: JSON.stringify({name: "Clement"})}).then(function(execution) { console.log(execution.sid); });
+        twilio.studio.flows('FW489f1d26d21e9c3ab611ee89b0ae5520').executions.create({ to: '+12029183768', from: '+1331481', parameters: JSON.stringify({name: "Clement"})}).then(function(execution) { console.log(execution.sid); });
         //Hang up
       } else if (numTries > 2) {
         //3 attempts failed
