@@ -38,18 +38,17 @@ const callerUserId = async (phone) => {
     // const client = await pool.getConnection()
     // const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
     // client.release();
-    await pool.getConnection(function(err, connection) {
+    await pool.query('SELECT userid FROM users where phone=\'' + phone + '\'', function(err, result) {
         if (err) throw new Error(err);
         console.log('executing SELECT userid FROM users where phone=\'' + phone + '\'');
-        connection.query('SELECT userid FROM users where phone=\'' + phone + '\'', function (err, result) {
-            if (err) throw new Error(err);
-            console.log('user id in select is '+result[0].userid);
+        if (err) throw new Error(err);
+        console.log('user id in select is '+result[0].userid);
             // Check for user in db
             if (Object.keys(result).length !== 0) {
               return result[0].userid;
             }
-              connection.release();
-        })
+        
+        
     });
   } catch (err) {
       console.error(err);
@@ -90,19 +89,12 @@ const incomingCall = async (req, res) => {
           // const client = await pool.connect()
           // const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
           // client.release();
-          await pool.getConnection(function(err, connection) {
-            if (err) throw new Error(err);
+          await pool.query('insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')', function(err, result) {
+              if (err) throw new Error(err);
 
               console.log('executing insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')');
-              const result = await connection.query('insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')';
-              console.log(result);
               console.log('Result in insert is '+ result);
-                  // if (Object.keys(result).length !== 0) {
-                  //   return result[0].userid;
-                  // }
-                  return jsonResponse.userId;
-                  connection.release();
-              
+              return jsonResponse.userId;
           });
 
         } catch (err) {
