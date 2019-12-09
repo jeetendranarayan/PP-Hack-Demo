@@ -271,7 +271,7 @@ const processVerification = async (req, res) => {
 
       if (jsonResponse.responseCode == "SUCC") {
         speak(twiml, 'Verification successful!, We ll soon integrate with AAman\'s code');
-        var authHeader = "ACfc4270a8dcd1908b732ce2c86e90e548:22c07aa43a723a413fa2b02757ed7983",
+        var authHeader = "ACfc4270a8dcd1908b732ce2c86e90e548:22c07aa43a723a413fa2b02757ed7983";
         
         var auth = "Basic " + new Buffer(authHeader).toString("base64");
         var options = {
