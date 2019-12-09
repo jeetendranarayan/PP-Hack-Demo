@@ -41,7 +41,6 @@ const callerUserId = async (phone) => {
     await pool.query('SELECT userid FROM users where phone=\'' + phone + '\'', function(err, result) {
         if (err) throw new Error(err);
         console.log('executing SELECT userid FROM users where phone=\'' + phone + '\'');
-        if (err) throw new Error(err);
         console.log('user id in select is '+result[0].userid);
             // Check for user in db
             
@@ -50,7 +49,7 @@ const callerUserId = async (phone) => {
   } catch (err) {
       console.error(err);
   }
-  return 0
+  return -10912
 };
 
 const incomingCall = async (req, res) => {
