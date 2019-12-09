@@ -20,6 +20,8 @@ var pool  = mysql.createPool({
     database : '58y5021f53'
 });
 
+var rp = require('request-promise');
+
 //const pool = pool1.promise();
 
 const PORT = process.env.PORT || 5000
@@ -269,8 +271,30 @@ const processVerification = async (req, res) => {
 
       if (jsonResponse.responseCode == "SUCC") {
         speak(twiml, 'Verification successful!, We ll soon integrate with AAman\'s code');
-        var twclient = new twilio('ACfc4270a8dcd1908b732ce2c86e90e548', '22c07aa43a723a413fa2b02757ed7983');
-        twclient.studio.flows('FW489f1d26d21e9c3ab611ee89b0ae5520').executions.create({ to: '+12029183768', from: '+1331481', parameters: JSON.stringify({name: "Clement"})}).then(function(execution) { console.log(execution.sid); });
+        var authHeader = "ACfc4270a8dcd1908b732ce2c86e90e548:22c07aa43a723a413fa2b02757ed7983",
+        
+        var auth = "Basic " + new Buffer(authHeader).toString("base64");
+        var options = {
+            method: 'POST',
+            uri: 'https://studio.twilio.com/v1/Flows/FW489f1d26d21e9c3ab611ee89b0ae5520/Executions',
+            headers : {
+              "Authorization" : authHeader
+            },
+            body: {
+                "From":"+919591601428",
+                "To":"+19896420652"
+            },
+            json: true // Automatically stringifies the body to JSON
+        };
+
+        rp(options)
+          .then(function (parsedBody) {
+              console.log('post call done')
+          })
+          .catch(function (err) {
+              throw err;
+          });
+
         //Hang up
       } else if (numTries > 2) {
         //3 attempts failed
