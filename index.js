@@ -271,31 +271,32 @@ const processVerification = async (req, res) => {
       console.log("createVoiceVerificationByUrl: ", jsonResponse.message);
 
       if (jsonResponse.responseCode == "SUCC") {
-        speak(twiml, 'Verification successful!, We ll soon integrate with AAman\'s code');
-        var authHeader = "ACfc4270a8dcd1908b732ce2c86e90e548:22c07aa43a723a413fa2b02757ed7983";
+        speak(twiml, 'Verification successful!, We will soon integrate with AAman\'s code');
+        // var authHeader = "ACfc4270a8dcd1908b732ce2c86e90e548:22c07aa43a723a413fa2b02757ed7983";
         
-        var auth = "Basic " + new Buffer(authHeader).toString("base64");
-        //var jsonBody = {'From' : '+919591601428', 'To': '+19896420652'};
-        var options = {
-            method: 'POST',
-            uri: 'https://studio.twilio.com/v1/Flows/FW489f1d26d21e9c3ab611ee89b0ae5520/Executions',
-            headers : {
-              'Authorization' : auth,
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            form: {
-              From : '+919591601428',
-              To: '+19896420652'
-            }
-        };
+        // var auth = "Basic " + new Buffer(authHeader).toString("base64");
+        // //var jsonBody = {'From' : '+919591601428', 'To': '+19896420652'};
+        // var options = {
+        //     method: 'POST',
+        //     uri: 'https://studio.twilio.com/v1/Flows/FW489f1d26d21e9c3ab611ee89b0ae5520/Executions',
+        //     headers : {
+        //       'Authorization' : auth,
+        //       'Content-Type': 'application/x-www-form-urlencoded'
+        //     },
+        //     form: {
+        //       From : '+919591601428',
+        //       To: '+19896420652'
+        //     }
+        // };
 
-        rp(options)
-          .then(function (parsedBody) {
-              console.log('post call done');
-          })
-          .catch(function (err) {
-              throw err;
-          });
+        // rp(options)
+        //   .then(function (parsedBody) {
+        //       console.log('post call done');
+        //   })
+        //   .catch(function (err) {
+        //       throw err;
+        //   });
+        return 200;
 
         //Hang up
       } else if (numTries > 2) {
