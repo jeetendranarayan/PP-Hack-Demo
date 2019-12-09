@@ -99,10 +99,11 @@ const incomingCall = async (req, res) => {
                   
                   console.log(result);
                   
-
-                  if (Object.keys(result).length !== 0) {
-                    return result[0].userid;
-                  }
+                  console.log('Result in insert is '+ result);
+                  // if (Object.keys(result).length !== 0) {
+                  //   return result[0].userid;
+                  // }
+                  return jsonResponse.userId;
                   connection.release();
               })
           });
