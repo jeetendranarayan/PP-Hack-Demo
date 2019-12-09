@@ -35,33 +35,22 @@ express()
 
 const callerUserId = async (phone) => {
   try {
+    // const client = await pool.getConnection()
+    // const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
+    // client.release();
     await pool.getConnection(function(err, connection) {
         if (err) throw new Error(err);
         console.log('executing SELECT userid FROM users where phone=\'' + phone + '\'');
-         connection.query('SELECT userid FROM users where phone=\'' + phone + '\'', function (err, result) {
+        connection.query('SELECT userid FROM users where phone=\'' + phone + '\'', function (err, result) {
             if (err) throw new Error(err);
-            console.log(result);
-            if(result.length === 0)
-              return 0;
-
-            //if (Object.keys(result.rows).length !== 0) {
+            console.log('user id in select is '+result[0].userid);
+            // Check for user in db
+            if (Object.keys(result).length !== 0) {
               return result[0].userid;
-            //}
-            connection.release();
+            }
+              connection.release();
         })
-    });
-    // const result = await client.query('SELECT userId FROM users where phone=\'' + phone + '\'');
-    // client.release();
-    // pool.query('SELECT userId FROM users where phone=\'' + phone + '\'', function (err, result) {
-    //   if (err) throw new Error(err);
-    //   if(result.length == 0)
-    //     return 0;
-    //   if (Object.keys(result.rows).length !== 0) {
-    //     return result.rows[0].userid;
-    //   }
-    // })
-    // Check for user in db
-    
+    }
   } catch (err) {
       console.error(err);
   }
@@ -88,7 +77,7 @@ const incomingCall = async (req, res) => {
         numDigits: 1,
         timeout: 5
       });
-      speak(gather, "Please press one to enroll");
+      speak(gather, "You may now log in, or press one to re enroll");
       twiml.redirect('/enroll_or_verify?digits=TIMEOUT');
       res.type('text/xml');
       res.send(twiml.toString());
@@ -98,7 +87,7 @@ const incomingCall = async (req, res) => {
       myVoiceIt.createUser(async (jsonResponse)=>{
         speak(twiml, "Welcome back to the Paypal offline payment service, you are a new user and will now be enrolled");
         try {
-          // const client = await pool.getConnection()
+          // const client = await pool.connect()
           // const result = await client.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')');
           // client.release();
           await pool.getConnection(function(err, connection) {
@@ -106,39 +95,18 @@ const incomingCall = async (req, res) => {
 
               console.log('executing insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')');
               connection.query('insert into users(phone, userID) values (\''+ phone +'\', \'' + jsonResponse.userId + '\')', function (err, result) {
-                  console.log('user id is '+jsonResponse.userId);
-                  //if (err) throw new Error(err);
-                  connection.commit(function(err) {
-                    if (err) { 
-                      connection.rollback(function() {
-                        throw err;
-                      });
-                    }
-                      console.log('Transaction Complete.');
-                      connection.end();
-                  });
+                  if (err) throw new Error(err);
+                  
                   console.log(result);
-                  return jsonResponse.userId;
+                  
 
-                  // if (Object.keys(result.rows).length !== 0) {
-                    //return result.rows[0].userid;
-                  //}
+                  if (Object.keys(result).length !== 0) {
+                    return result[0].userid;
+                  }
                   connection.release();
               })
           });
-        //   pool.query('insert into users values ('+ phone +', \'' + jsonResponse.userId + '\')', function (err, result) {
-        //     if (err) throw new Error(err);
-        //     connection.commit(function(err) {
-        // if (err) { 
-        //   connection.rollback(function() {
-        //     throw err;
-        //   });
-        // }
-      //   console.log('success!');
-      // });
-          //   return result.rows[0].userid;
-            
-          // })
+
         } catch (err) {
           console.error(err);
           res.send("Error " + err);
@@ -168,7 +136,7 @@ const enrollOrVerify = async (req, res) => {
       userId: userId,
       }, async (jsonResponse)=>{
         console.log("deleteAllEnrollments JSON: ", jsonResponse.message);
-        speak(twiml, "You have chosen to re enroll your voice for authentication, you will now be asked to say a phrase three times, then you will be able to log in with that phrase");
+        speak(twiml, "You have chosen to re enroll your voice, you will now be asked to say a phrase three times, then you will be able to log in with that phrase");
         twiml.redirect('/enroll');
         res.type('text/xml');
         res.send(twiml.toString());
@@ -179,7 +147,7 @@ const enrollOrVerify = async (req, res) => {
     myVoiceIt.getAllVoiceEnrollments({
       userId: userId
       }, async (jsonResponse)=>{
-        speak(twiml, "You have chosen to authenticate with your Voice.");
+        speak(twiml, "You have chosen to verify your Voice.");
         console.log("jsonResponse.message: ", jsonResponse.message);
         const enrollmentsCount = jsonResponse.count;
         console.log("enrollmentsCount: ", enrollmentsCount);
@@ -239,7 +207,7 @@ const processEnrollment = async (req, res) => {
   }
 
   function enrollAgain(){
-    speak(twiml, 'Your enrollment was not successful, please try again');
+    speak(twiml, 'Your recording was not successful, please try again');
     twiml.redirect('/enroll?enrollCount=' + enrollCount);
   }
 
@@ -247,10 +215,10 @@ const processEnrollment = async (req, res) => {
   await new Promise(resolve => setTimeout(resolve, 1000));
   myVoiceIt.createVoiceEnrollmentByUrl({
     userId: userId,
-	  audioFileURL: recordingURL,
+    audioFileURL: recordingURL,
     phrase: config.chosenVoicePrintPhrase,
-	  contentLanguage: config.contentLanguage,
-	}, async (jsonResponse)=>{
+    contentLanguage: config.contentLanguage,
+  }, async (jsonResponse)=>{
       console.log("createVoiceEnrollmentByUrl json: ", jsonResponse.message);
       if ( jsonResponse.responseCode === "SUCC" ) {
         enrollmentDone();
@@ -289,19 +257,19 @@ const processVerification = async (req, res) => {
   await new Promise(resolve => setTimeout(resolve, 1000));
   myVoiceIt.voiceVerificationByUrl({
     userId: userId,
-  	audioFileURL: recordingURL,
+    audioFileURL: recordingURL,
     phrase: config.chosenVoicePrintPhrase,
-  	contentLanguage: config.contentLanguage,
-  	}, async (jsonResponse)=>{
+    contentLanguage: config.contentLanguage,
+    }, async (jsonResponse)=>{
       console.log("createVoiceVerificationByUrl: ", jsonResponse.message);
 
       if (jsonResponse.responseCode == "SUCC") {
         speak(twiml, 'Verification successful!');
-        speak(twiml,'Please enter phone number of the payment receiver');
+        speak(twiml,'Thank you for calling voice its voice biometrics demo. Have a nice day!');
         //Hang up
       } else if (numTries > 2) {
         //3 attempts failed
-        speak(twiml,'We are unable to authenticate you, please redial and try again.');
+        speak(twiml,'Too many failed attempts. Please call back and select option 1 to re enroll and verify again.');
       } else {
         switch (jsonResponse.responseCode) {
           case "STTF":
