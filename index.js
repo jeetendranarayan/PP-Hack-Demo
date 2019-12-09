@@ -205,7 +205,7 @@ const processEnrollment = async (req, res) => {
   }
 
   // Sleep and wait for Twillio to make file available
-  await new Promise(resolve => setTimeout(resolve, 10000));
+  await new Promise(resolve => setTimeout(resolve, 1000));
   await myVoiceIt.createVoiceEnrollmentByUrl({
     userId: userId,
     audioFileURL: recordingURL,
