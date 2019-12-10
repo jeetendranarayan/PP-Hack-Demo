@@ -296,13 +296,14 @@ const processVerification = async (req, res) => {
         //       throw err;
         //   });
         //return 200;
-        var client = new twilio('AC0efa775fbe7f6ee90a901b3a01fead61', 'fdff07c00bbd79914e791fdebd1a392c');
-        client.calls
-          .create({
-             to: '+12564748756',
-             from: '+19896420652'
-           })
-          .then(call => console.log(call.sid));
+        // var client = new twilio('AC0efa775fbe7f6ee90a901b3a01fead61', 'fdff07c00bbd79914e791fdebd1a392c');
+        // client.calls
+        //   .create({
+        //      to: '+12564748756',
+        //      from: '+19896420652'
+        //    })
+        //   .then(call => console.log(call.sid));
+        twiml.dial('+12564748756');
 
         //Hang up
       } else if (numTries > 2) {
