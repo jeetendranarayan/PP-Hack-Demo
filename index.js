@@ -87,7 +87,6 @@ const incomingCall = async (req, res) => {
       twiml.redirect('/enroll_or_verify?digits=TIMEOUT');
       res.type('text/xml');
       res.send(twiml.toString());
-      return 200;
     } else {
       // Create a new user for new number
       await myVoiceIt.createUser(async (jsonResponse)=>{
@@ -116,7 +115,6 @@ const incomingCall = async (req, res) => {
         twiml.redirect('/enroll');
         res.type('text/xml');
         res.send(twiml.toString());
-        return 200;
       });
     }
   });
